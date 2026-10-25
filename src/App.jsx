@@ -362,16 +362,16 @@ function App() {
   )
 
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", padding: '0 80px', backgroundColor: '#ffffff', minHeight: '100vh', position: 'relative' }}>
+    <div className="app-root" style={{ fontFamily: "'Inter', sans-serif", padding: '0 80px', backgroundColor: '#ffffff', minHeight: '100vh', position: 'relative' }}>
       
       {/* THANH ĐẦU TRANG (HEADER) */}
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 0', borderBottom: '1px solid #f2f2f2', marginBottom: '20px' }}>
+      <header className="app-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 0', borderBottom: '1px solid #f2f2f2', marginBottom: '20px' }}>
         <div style={{ fontSize: '24px', fontWeight: '800', color: '#FF385C', cursor: 'pointer' }} onClick={() => navigateTo('home')}>
           🔴 khai_stay
         </div>
         
         {/* THANH MENU ĐIỀU HƯỚNG CHỨC NĂNG MỚI */}
-		<div style={{ display: 'flex', gap: '24px', fontSize: '14px', fontWeight: '600', color: '#222222' }}>
+		<div className="app-nav" style={{ display: 'flex', gap: '24px', fontSize: '14px', fontWeight: '600', color: '#222222' }}>
 			<span style={{ cursor: 'pointer', color: view === 'home' ? '#FF385C' : '#222222' }} onClick={() => navigateTo('home')}>Nơi ở</span>
 			<span style={{ cursor: 'pointer', color: view === 'experience' ? '#FF385C' : '#222222' }} onClick={() => navigateTo('experience')}>Trải nghiệm</span>
 			<span style={{ cursor: 'pointer', color: view === 'specialty' ? '#FF385C' : '#222222' }} onClick={() => navigateTo('specialty')}>Đặc sản</span>
@@ -457,7 +457,7 @@ function App() {
                 />
 
                 {/* Giữ nguyên ô nhập Username cũ */}
-                <input type="text" placeholder="Nhập tên đăng nhập muốn tạo" value={regUser} onChange={e => setRegUser(e.target.value)} required style={{ width: '100%', padding: '12px', marginBottom: '16px', borderRadius: '8px', border: '1px solid #ccc', boxSizing: 'border-box' }} />
+                <input className="search-input" type="text" placeholder="Nhập tên đăng nhập muốn tạo" value={regUser} onChange={e => setRegUser(e.target.value)} required style={{ width: '100%', padding: '12px', marginBottom: '16px', borderRadius: '8px', border: '1px solid #ccc', boxSizing: 'border-box' }} />
                 
                 {/* Giữ nguyên ô nhập Password cũ */}
                 <input type="password" placeholder="Nhập mật khẩu bảo mật" value={regPass} onChange={e => setRegPass(e.target.value)} required style={{ width: '100%', padding: '12px', marginBottom: '24px', borderRadius: '8px', border: '1px solid #ccc', boxSizing: 'border-box' }} />
@@ -475,7 +475,7 @@ function App() {
         <div style={{ marginTop: '30px' }}>
           <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '20px' }}>📅 Lịch sử đặt phòng của bạn</h2>
           {history.length === 0 ? <p style={{ color: '#717171' }}>Bạn chưa đặt căn phòng nào cả!</p> : (
-            <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px' }}>
+            <table className="history-table" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px' }}>
               <thead>
                 <tr style={{ backgroundColor: '#f7f7f7', borderBottom: '2px solid #dddddd', textAlign: 'left' }}>
                   <th style={{ padding: '12px' }}>Mã đơn</th>
@@ -521,8 +521,8 @@ function App() {
       {view === 'home' && (
         <>
 		  {/* THANH LỌC THÀNH PHỐ & Ô TÌM KIẾM */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', gap: '20px' }}>
-            <div style={{ display: 'flex', gap: '12px' }}>
+          <div className="filter-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', gap: '20px' }}>
+            <div className="city-list" style={{ display: 'flex', gap: '12px' }}>
               {cities.map(city => (
                 <button key={city} onClick={() => setSelectedCity(city)} style={{ padding: '10px 20px', borderRadius: '20px', border: selectedCity === city ? '2px solid #222222' : '1px solid #dddddd', backgroundColor: selectedCity === city ? '#222222' : '#ffffff', color: selectedCity === city ? '#ffffff' : '#717171', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
                   {city === 'Tất cả' ? '🌍 Tất cả khu vực' : `📍 ${city}`}
@@ -539,7 +539,7 @@ function App() {
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '40px', alignItems: 'start' }}>
+          <div className="home-layout" style={{ display: 'flex', gap: '40px', alignItems: 'start' }}>
             {/* GRID HIỂN THỊ PHÒNG */}
             <div style={{ flex: 1 }}>
               <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#222222', marginBottom: '20px' }}>🏠 Chỗ ở tại {selectedCity}</h2>
@@ -564,7 +564,7 @@ function App() {
             </div>
 
             {/* FORM ĐẶT PHÒNG */}
-            <div style={{ width: '380px', position: 'sticky', top: '40px' }}>
+            <div className="booking-panel" style={{ width: '380px', position: 'sticky', top: '40px' }}>
               <div style={{ border: '1px solid #dddddd', borderRadius: '24px', padding: '24px', boxShadow: '0 6px 16px rgba(0,0,0,0.12)' }}>
                 <h3 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '24px', width: '100%', boxSizing: 'border-box'}}>Đặt phòng</h3>
                 <form onSubmit={triggerPaymentStep}>
@@ -594,7 +594,7 @@ function App() {
 	  {/* MODAL CHỌN PHƯƠNG THỨC THANH TOÁN */}
 	  {showMethodModal && (
 		<div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 9999 }}>
-		  <div style={{ backgroundColor: '#fff', padding: '32px', borderRadius: '20px', width: '420px', boxShadow: '0 8px 30px rgba(0,0,0,0.3)', textAlign: 'center' }}>
+		  <div className="modal-box" style={{ backgroundColor: '#fff', padding: '32px', borderRadius: '20px', width: '420px', boxShadow: '0 8px 30px rgba(0,0,0,0.3)', textAlign: 'center' }}>
 			<h2 style={{ fontSize: '20px', fontWeight: '700', color: '#1E3A8A', marginBottom: '8px' }}>💳 Chọn phương thức thanh toán</h2>
 			<p style={{ color: '#6B7280', fontSize: '14px', marginBottom: '24px' }}>
 			  Tổng tiền: <strong style={{ color: '#FF385C' }}>{Number(tempBookingData?.total_price).toLocaleString('vi-VN')} VNĐ</strong>
@@ -626,7 +626,7 @@ function App() {
 	  {/* --- MODAL THANH TOÁN THỰC TẾ --- */}
       {showPaymentModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 9999 }}>
-          <div style={{ backgroundColor: '#ffffff', padding: '32px', borderRadius: '20px', width: '450px', boxShadow: '0 8px 30px rgba(0,0,0,0.3)', textAlign: 'center' }}>
+          <div className="modal-box" style={{ backgroundColor: '#ffffff', padding: '32px', borderRadius: '20px', width: '450px', boxShadow: '0 8px 30px rgba(0,0,0,0.3)', textAlign: 'center' }}>
             <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#1E3A8A', marginBottom: '12px' }}>💳 CỔNG THANH TOÁN KHAI_PAY</h2>
             <p style={{ fontSize: '14px', color: '#4B5563', marginBottom: '20px' }}>Bạn đang thực hiện thanh toán cho chỗ ở: <br/><strong>{tempBookingData?.title}</strong></p>
             

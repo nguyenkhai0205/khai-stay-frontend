@@ -4,6 +4,14 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import vi from 'date-fns/locale/vi'; // Import ngôn ngữ Tiếng Việt
 import { API_URL } from './config'
+import { getImages } from './imageHelper'
+
+const act1       = getImages('activities/act1')
+const act2        = getImages('activities/act2')
+const act3       = getImages('activities/act3')
+const cachivangkho = getImages('specialties/cachivangkho')
+const cachimtrang  = getImages('specialties/cachimtrang')
+const mucmotnang   = getImages('specialties/mucmotnang')
 
 function App() {
   // Điều hướng trang: 'home' (Trang chủ), 'login' (Đăng nhập), 'history' (Lịch sử)
@@ -13,6 +21,9 @@ function App() {
   const navigateTo = (v) => {
 	localStorage.setItem('currentView', v)
 	setView(v)
+	setDetailHomestay(null)
+    setSelectedActivity(null)
+    setselectedFood(null)
   }
   
   // Quản lý tài khoản
@@ -29,6 +40,24 @@ function App() {
   const [regLastName, setRegLastName] = useState('')
   const [regEmail, setRegEmail] = useState('')
   const [regPhone, setRegPhone] = useState('')
+  
+  // 🔑 Quên mật khẩu / Đặt lại mật khẩu
+  const [isForgotMode, setIsForgotMode] = useState(false)
+  const [forgotEmail, setForgotEmail] = useState('')
+  const [resetData, setResetData] = useState(null)   // { uid, token } lấy từ link trong email
+  const [newPass, setNewPass] = useState('')
+  const [newPass2, setNewPass2] = useState('')
+
+  // Nếu người dùng mở link trong email (?reset_uid=...&reset_token=...) thì hiện form đặt mật khẩu mới
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search)
+    const uid = p.get('reset_uid')
+    const tk = p.get('reset_token')
+    if (uid && tk) {
+      setResetData({ uid, token: tk })
+      setView('reset')
+    }
+  }, [])
 
   // Dữ liệu Homestay & Bộ lọc
   const [homestays, setHomestays] = useState([])
@@ -56,6 +85,10 @@ function App() {
   const [selectedActivity, setSelectedActivity] = useState(null) // null = list, object = detail page
   const [selectedFood, setselectedFood] = useState(null) // null = list, object = detail page
   
+  // Homestay detail page (null = list)
+  const [detailHomestay, setDetailHomestay] = useState(null)
+  const [activeImage, setActiveImage] = useState(0)
+  
   useEffect(() => {
     axios.get(`${API_URL}/api/homestays/`)
       .then(res => {
@@ -73,14 +106,10 @@ function App() {
   const activities = [
 	{
 		id: 1,
-		title: "Lặn biển Côn Đảo",
-		mainImage: "/images/activities/diving/diving.jpg",
-		description: "Khám phá thế giới đại dương tuyệt đẹp tại Côn Đảo với làn nước trong xanh.",
-		images: [
-			"/images/activities/diving/diving1.jpg",
-			"/images/activities/diving/diving2.jpg",
-			"/images/activities/diving/diving3.jpg",
-		],
+		title: "Kéo lưới cá sáng sớm",
+		mainImage: act1[0],
+		description: "Kéo lưới cá sáng sớm.",
+		images: act1.slice(1),
 		details: `Lặn biển tại Côn Đảo là trải nghiệm không thể bỏ qua...
 		Thời gian: 6:00 - 12:00
 		Giá: 500.000 VNĐ/người
@@ -88,27 +117,21 @@ function App() {
 	},
 	{
 		id: 2,
-		title: "Kayak sông nước",
-		mainImage: "/images/activities/kayak/kayak.jpg",
-		description: "Chèo thuyền kayak khám phá hệ thống sông ngòi miền Tây thơ mộng.",
-		images: [
-			"/images/activities/kayak/kayak1.jpg",
-			"/images/activities/kayak/kayak2.jpg",
-		],
-		details: `Trải nghiệm chèo kayak độc đáo trên dòng sông hiền hòa...
+		title: "Bắt cua bãi biển vào buổi tối",
+		mainImage: act2[0],
+		description: "Bắt cua bãi biển vào buổi tối.",
+		images: act2.slice(1),
+		details: `Trải nghiệm cBắt cua bãi biển vào buổi tối độc đáo ...
 		Thời gian: 7:00 - 11:00
 		Giá: 300.000 VNĐ/người`
 	},
 	{
 		id: 3,
-		title: "Leo núi Bà Đen",
-		mainImage: "/images/activities/hiking/hiking.jpg",
-		description: "Chinh phục đỉnh núi Bà Đen hùng vĩ, ngắm toàn cảnh Tây Ninh từ trên cao.",
-		images: [
-			"/images/activities/hiking/hiking1.jpg",
-			"/images/activities/hiking/hiking2.jpg",
-		],
-		details: `Hành trình leo núi Bà Đen đầy thử thách và thú vị...
+		title: "Đi ghe trãi nghiệm ngắm biển",
+		mainImage: act3[0],
+		description: "Đi ghe trãi nghiệm ngắm biển.",
+		images: act3.slice(1),
+		details: `Hành trình Đi ghe trãi nghiệm ngắm biển hoàng hôn và bình minh...
 		Thời gian: 5:00 - 14:00
 		Giá: 200.000 VNĐ/người`
 	},
@@ -120,13 +143,9 @@ function App() {
 	{
 		id: 1,
 		title: "Cá chỉ vàng tẩm khô",
-		mainImage: "/images/specialties/1_cachivangkho/cachivangkho.jpg",
+		mainImage: cachivangkho[0],
 		description: "Cá chỉ vàng tẩm khô mặn mà hương thơm và gia vị biển Bình Châu.",
-		images: [
-			"/images/specialties/1_cachivangkho/cachivangkho1.jpg",
-			"/images/specialties/1_cachivangkho/cachivangkho2.jpg",
-			"/images/specialties/1_cachivangkho/cachivangkho3.jpg",
-		],
+		images: cachivangkho.slice(1),
 		details: `Cá chỉ vàng tẩm khô mặn mà hương thơm và gia vị biển Bình Châu...
 		Giá: 200.000 VNĐ/kg
 		Bao gồm: Đóng gói và hút chân không.`
@@ -134,12 +153,9 @@ function App() {
 	{
 		id: 2,
 		title: "Cá chim trắng biển",
-		mainImage: "/images/specialties/2_cachimtrang/cachimtrang.jpg",
+		mainImage: cachimtrang[0],
 		description: "Cá chim trắng biển béo và thơm ngon cho bữa cơm gia đình thêm ngọt ngào.",
-		images: [
-			"/images/specialties/2_cachimtrang/cachimtrang1.jpg",
-			"/images/specialties/2_cachimtrang/cachimtrang2.jpg",
-		],
+		images: cachimtrang.slice(1),
 		details: `Cá chim trắng biển béo và thơm ngon cho bữa cơm gia đình thêm ngọt ngào...
 		Giá: 300.000 VNĐ/kg
 		Bao gồm: Đóng gói và hút chân không.`
@@ -147,12 +163,9 @@ function App() {
 	{
 		id: 3,
 		title: "Mực một nắng",
-		mainImage: "/images/specialties/3_mucmotnang/mucmotnang.jpg",
+		mainImage: mucmotnang[0],
 		description: "Nếm thử mực một nắng và làm quà cho bà con và bạn bè.",
-		images: [
-			"/images/specialties/3_mucmotnang/mucmotnang1.jpg",
-			"/images/specialties/3_mucmotnang/mucmotnang2.jpg",
-		],
+		images: mucmotnang.slice(1),
 		details: `Mực một nắng Bình Châu...
 		Giá: 600.000 VNĐ/kg
 		Bao gồm: Đóng gói và hút chân không.`
@@ -260,6 +273,41 @@ function App() {
     })
   }
   
+  // 🔑 Gửi yêu cầu quên mật khẩu (backend gửi email chứa link)
+  const handleForgot = (e) => {
+    e.preventDefault()
+    axios.post(`${API_URL}/api/forgot-password/`, { email: forgotEmail })
+      .then(res => {
+        alert(res.data.message)
+        setIsForgotMode(false)
+        setForgotEmail('')
+      })
+      .catch(err => alert(err.response?.data?.error || 'Có lỗi xảy ra, vui lòng thử lại!'))
+  }
+
+  // 🔑 Đặt mật khẩu mới từ link trong email
+  const handleReset = (e) => {
+    e.preventDefault()
+    if (newPass !== newPass2) {
+      alert('Mật khẩu nhập lại không khớp!')
+      return
+    }
+    axios.post(`${API_URL}/api/reset-password/`, {
+      uid: resetData.uid,
+      token: resetData.token,
+      new_password: newPass
+    })
+      .then(res => {
+        alert(res.data.message)
+        window.history.replaceState({}, '', '/')   // xóa tham số reset khỏi thanh địa chỉ
+        setResetData(null)
+        setNewPass('')
+        setNewPass2('')
+        navigateTo('login')
+      })
+      .catch(err => alert(err.response?.data?.error || 'Đặt lại mật khẩu thất bại!'))
+  }
+  
   // Cập nhật trạng thái đơn hàng của Admin
   const handleAdminUpdate = (bookingId, statusValue) => {
     axios.post(`${API_URL}/api/bookings/${bookingId}/update/`, { status: statusValue }, {
@@ -346,6 +394,13 @@ function App() {
     })
   }
 
+  const openHomestayDetail = (item) => {
+    handleHomestayChange(item.id)   // pre-select this room in the booking form
+    setDetailHomestay(item)
+    setActiveImage(0)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+  
   const cities = ['Tất cả', ...new Set(homestays.map(item => item.city))]
   const filteredHomestays = homestays.filter(item => {
     const matchCity = selectedCity === 'Tất cả' || item.city === selectedCity
@@ -356,7 +411,7 @@ function App() {
   if (loading) return (
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', gap: '16px' }}>
       <div style={{ width: '40px', height: '40px', border: '4px solid #f3f3f3', borderTop: '4px solid #FF385C', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
-      <div style={{ fontSize: '16px', fontWeight: '600', color: '#717171' }}>⌛ Đang tải dữ liệu khai_stay...</div>
+      <div style={{ fontSize: '16px', fontWeight: '600', color: '#717171' }}>⌛ Đang tải dữ liệu Chú Phương_stay...</div>
       <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
     </div>
   )
@@ -367,7 +422,7 @@ function App() {
       {/* THANH ĐẦU TRANG (HEADER) */}
       <header className="app-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 0', borderBottom: '1px solid #f2f2f2', marginBottom: '20px' }}>
         <div style={{ fontSize: '24px', fontWeight: '800', color: '#FF385C', cursor: 'pointer' }} onClick={() => navigateTo('home')}>
-          🔴 khai_stay
+          🔴 Chú Phương_stay
         </div>
         
         {/* THANH MENU ĐIỀU HƯỚNG CHỨC NĂNG MỚI */}
@@ -399,16 +454,46 @@ function App() {
       {/* RENDER THEO BIẾN ĐIỀU HƯỚNG VIEW */}
       
 	  {/* ---------------- 1. VIEW ĐĂNG NHẬP / ĐĂNG KÝ ---------------- */}
-      {view === 'login' && (
+	  {/* 🔑 MÀN HÌNH QUÊN MẬT KHẨU */}
+      {view === 'login' && isForgotMode && (
+        <div style={{ maxWidth: '400px', margin: '80px auto', padding: '32px', border: '1px solid #dddddd', borderRadius: '16px', boxShadow: '0 6px 16px rgba(0,0,0,0.08)' }}>
+          <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '12px', textAlign: 'center' }}>Quên mật khẩu</h2>
+          <p style={{ fontSize: '14px', color: '#717171', textAlign: 'center', marginBottom: '24px' }}>
+            Nhập email bạn đã dùng khi đăng ký. Chúng tôi sẽ gửi liên kết để đặt lại mật khẩu.
+          </p>
+          <form onSubmit={handleForgot}>
+            <input type="email" placeholder="Email đã đăng ký" value={forgotEmail} onChange={e => setForgotEmail(e.target.value)} required style={{ width: '100%', padding: '12px', marginBottom: '16px', borderRadius: '8px', border: '1px solid #ccc', boxSizing: 'border-box' }} />
+            <button type="submit" style={{ width: '100%', padding: '14px', backgroundColor: '#FF385C', color: 'white', border: 'none', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}>Gửi liên kết đặt lại mật khẩu</button>
+          </form>
+          <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '14px' }}>
+            <span style={{ color: '#FF385C', cursor: 'pointer', fontWeight: 'bold' }} onClick={() => setIsForgotMode(false)}>← Quay lại đăng nhập</span>
+          </p>
+        </div>
+      )}
+
+      {/* 🔑 MÀN HÌNH ĐẶT MẬT KHẨU MỚI (mở từ link trong email) */}
+      {view === 'reset' && (
+        <div style={{ maxWidth: '400px', margin: '80px auto', padding: '32px', border: '1px solid #dddddd', borderRadius: '16px', boxShadow: '0 6px 16px rgba(0,0,0,0.08)' }}>
+          <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '24px', textAlign: 'center' }}>Đặt mật khẩu mới</h2>
+          <form onSubmit={handleReset}>
+            <input type="password" placeholder="Mật khẩu mới (tối thiểu 8 ký tự)" value={newPass} onChange={e => setNewPass(e.target.value)} required minLength={8} style={{ width: '100%', padding: '12px', marginBottom: '16px', borderRadius: '8px', border: '1px solid #ccc', boxSizing: 'border-box' }} />
+            <input type="password" placeholder="Nhập lại mật khẩu mới" value={newPass2} onChange={e => setNewPass2(e.target.value)} required minLength={8} style={{ width: '100%', padding: '12px', marginBottom: '16px', borderRadius: '8px', border: '1px solid #ccc', boxSizing: 'border-box' }} />
+            <button type="submit" style={{ width: '100%', padding: '14px', backgroundColor: '#FF385C', color: 'white', border: 'none', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}>Đổi mật khẩu</button>
+          </form>
+        </div>
+      )}
+	  
+      {view === 'login' && !isForgotMode && (
         <div style={{ maxWidth: '400px', margin: '80px auto', padding: '32px', border: '1px solid #dddddd', borderRadius: '16px', boxShadow: '0 6px 16px rgba(0,0,0,0.08)' }}>
           {!isRegisterMode ? (
             <>
-              <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '24px', textAlign: 'center' }}>Chào mừng bạn đến với khai_stay</h2>
+              <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '24px', textAlign: 'center' }}>Chào mừng bạn đến với Chú Phương_stay</h2>
               <form onSubmit={handleLogin}>
                 <input type="text" placeholder="Tên đăng nhập (Admin hoặc User)" value={loginUser} onChange={e => setLoginUser(e.target.value)} required style={{ width: '100%', padding: '12px', marginBottom: '16px', borderRadius: '8px', border: '1px solid #ccc', boxSizing: 'border-box' }} />
                 <input type="password" placeholder="Mật khẩu" value={loginPass} onChange={e => setLoginPass(e.target.value)} required style={{ width: '100%', padding: '12px', marginBottom: '24px', borderRadius: '8px', border: '1px solid #ccc', boxSizing: 'border-box' }} />
                 <button type="submit" style={{ width: '100%', padding: '14px', backgroundColor: '#FF385C', color: 'white', border: 'none', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}>Đăng nhập ngay</button>
               </form>
+              <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '14px' }}><span style={{ color: '#717171', cursor: 'pointer', textDecoration: 'underline' }} onClick={() => setIsForgotMode(true)}>Quên mật khẩu?</span></p>
               <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '14px' }}>Chưa có tài khoản? <span style={{ color: '#FF385C', cursor: 'pointer', fontWeight: 'bold' }} onClick={() => setIsRegisterMode(true)}>Đăng ký tài khoản mới</span></p>
             </>
           ) : (
@@ -532,6 +617,7 @@ function App() {
             
             <input 
               type="text" 
+			  className="search-input"
               placeholder="🔍 Nhập tên phòng cần tìm..." 
               value={searchKeyword}
               onChange={e => setSearchKeyword(e.target.value)}
@@ -542,14 +628,69 @@ function App() {
           <div className="home-layout" style={{ display: 'flex', gap: '40px', alignItems: 'start' }}>
             {/* GRID HIỂN THỊ PHÒNG */}
             <div style={{ flex: 1 }}>
+              {detailHomestay ? (
+                /* ---------- CHI TIẾT HOMESTAY ---------- */
+                <div>
+                  <button
+                    onClick={() => setDetailHomestay(null)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '15px', fontWeight: '600', color: '#222', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  >
+                    ← Quay lại Nơi ở
+                  </button>
+
+                  <h2 style={{ fontSize: '30px', fontWeight: '800', marginBottom: '8px' }}>{detailHomestay.title}</h2>
+                  <div style={{ color: '#717171', fontSize: '14px', marginBottom: '20px' }}>
+                    📍 {detailHomestay.address}, {detailHomestay.city}
+                  </div>
+
+                  {detailHomestay.images && detailHomestay.images.length > 0 ? (
+                    <>
+                      <img
+                        className="detail-main-img"
+                        src={detailHomestay.images[activeImage].image}
+                        alt={detailHomestay.title}
+                        style={{ width: '100%', height: '420px', objectFit: 'contain', borderRadius: '16px', marginBottom: '16px' }}
+                      />
+                      {detailHomestay.images.length > 1 && (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '12px', marginBottom: '28px' }}>
+                          {detailHomestay.images.map((img, i) => (
+                            <img
+                              key={img.id}
+                              src={img.image}
+                              alt={`${detailHomestay.title} ${i + 1}`}
+                              onClick={() => setActiveImage(i)}
+                              style={{ width: '100%', height: '100px', objectFit: 'cover', borderRadius: '12px', cursor: 'pointer', boxSizing: 'border-box', border: i === activeImage ? '3px solid #FF385C' : '3px solid transparent' }}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div style={{ height: '200px', backgroundColor: '#e4e4e4', borderRadius: '16px', marginBottom: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🖼️ Không có ảnh</div>
+                  )}
+
+                  <div style={{ display: 'flex', gap: '24px', fontSize: '16px', fontWeight: '600', marginBottom: '20px', flexWrap: 'wrap' }}>
+                    <span>💰 {parseFloat(detailHomestay.price_per_night).toLocaleString('vi-VN')} VND/đêm/người</span>
+                    <span>👥 Tối đa {detailHomestay.max_guests} khách</span>
+                  </div>
+
+                  <div style={{ backgroundColor: '#f9f9f9', borderRadius: '16px', padding: '24px' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '12px' }}>Mô tả chi tiết</h3>
+                    <p style={{ fontSize: '15px', color: '#444', lineHeight: '1.8', whiteSpace: 'pre-line' }}>
+                      {detailHomestay.description}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+              <>
               <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#222222', marginBottom: '20px' }}>🏠 Chỗ ở tại {selectedCity}</h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
                 {filteredHomestays.map(item => (
-                  <div key={item.id} style={{ display: 'flex', flexDirection: 'column', cursor: item.is_available ? 'pointer' : 'not-allowed', opacity: item.is_available ? 1 : 0.5 }} onClick={() => item.is_available && setSelectedHomestay(item.id)}>
-                    <div style={{ width: '100%', height: '200px', marginBottom: '12px', overflow: 'hidden', borderRadius: '12px', position: 'relative' }}>
-                      {!item.is_available && <div style={{ position: 'absolute', top: '12px', left: '12px', backgroundColor: '#EA580C', color: '#white', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '700' }}>🚫 HẾT PHÒNG</div>}
+                  <div key={item.id} style={{ display: 'flex', flexDirection: 'column', cursor: item.is_available ? 'pointer' : 'not-allowed', opacity: item.is_available ? 1 : 0.5 }} onClick={() => item.is_available && openHomestayDetail(item)}>
+                    <div style={{ width: '100%', height: '420px', marginBottom: '12px', overflow: 'hidden', borderRadius: '12px', position: 'relative', backgroundColor: '#f2f2f2' }}>
+                      {!item.is_available && <div style={{ position: 'absolute', top: '12px', left: '12px', backgroundColor: '#EA580C', color: 'white', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '700' }}>🚫 HẾT PHÒNG</div>}
                       {item.images && item.images.length > 0 ? (
-                        <img src={item.images[0].image} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={(item.images.find(i => i.is_featured) || item.images[0]).image} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                       ) : <div style={{ width: '100%', height: '100%', backgroundColor: '#e4e4e4' }}>🖼️ Không có ảnh</div>}
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: '600', fontSize: '15px' }}>
@@ -557,10 +698,12 @@ function App() {
                       <span>★ 4.95</span>
                     </div>
                     <div style={{ color: '#717171', fontSize: '14px', marginTop: '4px' }}>Thành phố: {item.city}</div>
-                    <div style={{ fontSize: '15px', fontWeight: '600', marginTop: '6px' }}>{parseFloat(item.price_per_night).toLocaleString('vi-VN')} VND/đêm</div>
+                    <div style={{ fontSize: '15px', fontWeight: '600', marginTop: '6px' }}>{parseFloat(item.price_per_night).toLocaleString('vi-VN')} VND/đêm/người</div>
                   </div>
                 ))}
               </div>
+              </>
+              )}
             </div>
 
             {/* FORM ĐẶT PHÒNG */}
@@ -680,7 +823,7 @@ function App() {
 							<img
 								src={activity.mainImage}
 								alt={activity.title}
-								style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+								style={{ width: '100%', height: '100%', objectFit: 'contain' }}
 							/>
 						</div>
 						{/* Card info */}
@@ -714,7 +857,7 @@ function App() {
 			<img
 				src={selectedActivity.mainImage}
 				alt={selectedActivity.title}
-				style={{ width: '100%', height: '420px', objectFit: 'cover', borderRadius: '16px', marginBottom: '24px' }}
+				style={{ width: '100%', height: '100%', objectFit: 'auto', borderRadius: '16px', marginBottom: '24px' }}
 			/>
 
 			{/* Extra images gallery */}
@@ -725,7 +868,7 @@ function App() {
 							key={i}
 							src={img}
 							alt={`${selectedActivity.title} ${i + 1}`}
-							style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '12px' }}
+							style={{ width: '100%', height: '100%', objectFit: 'auto', borderRadius: '12px' }}
 						/>
 					))}
 				</div>
@@ -763,7 +906,7 @@ function App() {
 							<img
 								src={food.mainImage}
 								alt={food.title}
-								style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+								style={{ width: '100%', height: '100%', objectFit: 'contain' }}
 							/>
 						</div>
 						{/* Card info */}
@@ -797,7 +940,7 @@ function App() {
 			<img
 				src={selectedFood.mainImage}
 				alt={selectedFood.title}
-				style={{ width: '100%', height: '420px', objectFit: 'cover', borderRadius: '16px', marginBottom: '24px' }}
+				style={{ width: '100%', height: '100%', objectFit: 'auto', borderRadius: '16px', marginBottom: '24px' }}
 			/>
 
 			{/* Extra images gallery */}
@@ -808,7 +951,7 @@ function App() {
 							key={i}
 							src={img}
 							alt={`${selectedFood.title} ${i + 1}`}
-							style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '12px' }}
+							style={{ width: '100%', height: '100%', objectFit: 'auto', borderRadius: '12px' }}
 						/>
 					))}
 				</div>
@@ -816,7 +959,7 @@ function App() {
 
 			{/* Description & details */}
 			<div style={{ backgroundColor: '#f9f9f9', borderRadius: '16px', padding: '24px' }}>
-				<h3 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '12px' }}>Mô tả hoạt động</h3>
+				<h3 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '12px' }}>Mô tả sản phẩm</h3>
 				<p style={{ fontSize: '15px', color: '#444', lineHeight: '1.8', whiteSpace: 'pre-line' }}>
 					{selectedFood.details}
 				</p>

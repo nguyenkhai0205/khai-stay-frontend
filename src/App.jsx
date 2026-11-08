@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import vi from 'date-fns/locale/vi'; // Import ngôn ngữ Tiếng Việt
 import { API_URL } from './config'
 import { getImages } from './imageHelper'
+import AboutPage from './AboutPage'
 
 const act1       = getImages('activities/act1')
 const act2        = getImages('activities/act2')
@@ -430,6 +431,7 @@ function App() {
 			<span style={{ cursor: 'pointer', color: view === 'home' ? '#FF385C' : '#222222' }} onClick={() => navigateTo('home')}>Nơi ở</span>
 			<span style={{ cursor: 'pointer', color: view === 'experience' ? '#FF385C' : '#222222' }} onClick={() => navigateTo('experience')}>Trải nghiệm</span>
 			<span style={{ cursor: 'pointer', color: view === 'specialty' ? '#FF385C' : '#222222' }} onClick={() => navigateTo('specialty')}>Đặc sản</span>
+			<span style={{ cursor: 'pointer', color: view === 'about' ? '#FF385C' : '#222222' }} onClick={() => navigateTo('about')}>Giới thiệu</span>
 			{token && <span style={{ cursor: 'pointer', color: view === 'history' ? '#FF385C' : '#222222' }} onClick={() => navigateTo('history')}>Lịch sử đặt</span>}
 		</div>
 		
@@ -967,7 +969,7 @@ function App() {
 
 		</div>
 	  )}
-	  
+	  {view === 'about' && <AboutPage onBook={() => navigateTo('home')} />}
     </div>
   )
 }

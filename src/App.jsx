@@ -111,10 +111,10 @@ function App() {
 		mainImage: act1[0],
 		description: "Kéo lưới cá sáng sớm.",
 		images: act1.slice(1),
-		details: `Lặn biển tại Côn Đảo là trải nghiệm không thể bỏ qua...
-		Thời gian: 6:00 - 12:00
-		Giá: 500.000 VNĐ/người
-		Bao gồm: Hướng dẫn viên, thiết bị lặn, nước uống.`
+		details: `Kéo lưới cá sáng sớm cần 2-4 người phối hợp thả lưới gần sát bờ biển và kéo ngược trờ lại bờ, là trải nghiệm không thể bỏ qua...
+		Thời gian: 6:00 - 9:00
+		Giá: 50.000 VNĐ/người
+		Bao gồm: Lưới, hai cây tre lớn để kéo, 3-4 người (bao gồm chú Phương), nước uống.`
 	},
 	{
 		id: 2,
@@ -122,9 +122,9 @@ function App() {
 		mainImage: act2[0],
 		description: "Bắt cua bãi biển vào buổi tối.",
 		images: act2.slice(1),
-		details: `Trải nghiệm cBắt cua bãi biển vào buổi tối độc đáo ...
-		Thời gian: 7:00 - 11:00
-		Giá: 300.000 VNĐ/người`
+		details: `Trải nghiệm Bắt cua bãi biển vào buổi tối độc đáo ...
+		Thời gian: 19:00 - 21:00
+		Giá: 50.000 VNĐ/người`
 	},
 	{
 		id: 3,
@@ -133,8 +133,8 @@ function App() {
 		description: "Đi ghe trãi nghiệm ngắm biển.",
 		images: act3.slice(1),
 		details: `Hành trình Đi ghe trãi nghiệm ngắm biển hoàng hôn và bình minh...
-		Thời gian: 5:00 - 14:00
-		Giá: 200.000 VNĐ/người`
+		Thời gian: Bình minh 5:00 - 07:00; Hoàng hôn 16:00 - 18:00
+		Giá: 250.000 VNĐ/người`
 	},
 	// ✏️ Add more activities here following the same structure
   ]
@@ -148,7 +148,7 @@ function App() {
 		description: "Cá chỉ vàng tẩm khô mặn mà hương thơm và gia vị biển Bình Châu.",
 		images: cachivangkho.slice(1),
 		details: `Cá chỉ vàng tẩm khô mặn mà hương thơm và gia vị biển Bình Châu...
-		Giá: 200.000 VNĐ/kg
+		Giá: Giá theo mùa, vui lòng liên hệ trước.
 		Bao gồm: Đóng gói và hút chân không.`
 	},
 	{
@@ -158,8 +158,8 @@ function App() {
 		description: "Cá chim trắng biển béo và thơm ngon cho bữa cơm gia đình thêm ngọt ngào.",
 		images: cachimtrang.slice(1),
 		details: `Cá chim trắng biển béo và thơm ngon cho bữa cơm gia đình thêm ngọt ngào...
-		Giá: 300.000 VNĐ/kg
-		Bao gồm: Đóng gói và hút chân không.`
+		Giá: Giá theo mùa, vui lòng liên hệ trước.
+		Bao gồm: Đóng gói.`
 	},
 	{
 		id: 3,
@@ -168,7 +168,7 @@ function App() {
 		description: "Nếm thử mực một nắng và làm quà cho bà con và bạn bè.",
 		images: mucmotnang.slice(1),
 		details: `Mực một nắng Bình Châu...
-		Giá: 600.000 VNĐ/kg
+		Giá: Giá theo mùa, vui lòng liên hệ trước.
 		Bao gồm: Đóng gói và hút chân không.`
 	},
 	// ✏️ Add more foods here following the same structure

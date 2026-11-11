@@ -134,7 +134,7 @@ function App() {
 		images: act3.slice(1),
 		details: `Hành trình Đi ghe trãi nghiệm ngắm biển hoàng hôn và bình minh...
 		Thời gian: Bình minh 5:00 - 07:00; Hoàng hôn 16:00 - 18:00
-		Giá: 250.000 VNĐ/người`
+		Giá: 150.000 VNĐ/người (nhóm từ 4 người trở lên)`
 	},
 	// ✏️ Add more activities here following the same structure
   ]

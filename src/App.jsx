@@ -113,7 +113,7 @@ function App() {
 		images: act1.slice(1),
 		details: `Kéo lưới cá sáng sớm cần 2-4 người phối hợp thả lưới gần sát bờ biển và kéo ngược trờ lại bờ, là trải nghiệm không thể bỏ qua...
 		Thời gian: 6:00 - 9:00
-		Giá: 50.000 VNĐ/người
+		Giá: 80.000 VNĐ/người
 		Bao gồm: Lưới, hai cây tre lớn để kéo, 3-4 người (bao gồm chú Phương), nước uống.`
 	},
 	{

@@ -10,6 +10,7 @@ import AboutPage from './AboutPage'
 const act1       = getImages('activities/act1')
 const act2        = getImages('activities/act2')
 const act3       = getImages('activities/act3')
+const act4       = getImages('activities/act4')
 const cachivangkho = getImages('specialties/cachivangkho')
 const cachimtrang  = getImages('specialties/cachimtrang')
 const mucmotnang   = getImages('specialties/mucmotnang')

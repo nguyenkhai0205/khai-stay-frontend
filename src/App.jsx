@@ -431,7 +431,7 @@ function App() {
   )
 
   return (
-    <div className="app-root" style={{ fontFamily: "'Inter', sans-serif", padding: '0 80px', backgroundColor: '#ffffff', minHeight: '100vh', position: 'relative' }}>
+    <div className="app-root" style={{ fontFamily: "'Inter', sans-serif", padding: '0 80px', backgroundColor: '#ffffff', color: '#222222', minHeight: '100vh', position: 'relative' }}>
       
       {/* THANH ĐẦU TRANG (HEADER) */}
       <header className="app-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 0', borderBottom: '1px solid #f2f2f2', marginBottom: '20px' }}>

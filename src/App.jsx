@@ -128,13 +128,25 @@ function App() {
 	},
 	{
 		id: 3,
-		title: "Đi ghe trãi nghiệm ngắm biển",
+		title: "Đi ghe máy trãi nghiệm ngắm biển",
 		mainImage: act3[0],
 		description: "Đi ghe trãi nghiệm ngắm biển.",
 		images: act3.slice(1),
 		details: `Hành trình Đi ghe trãi nghiệm ngắm biển hoàng hôn và bình minh...
 		Thời gian: Bình minh 5:00 - 07:00; Hoàng hôn 16:00 - 18:00
-		Giá: 150.000 VNĐ/người (nhóm từ 4 người trở lên)`
+		Giá: 180.000 VNĐ/người (nhóm từ 4 người trở lên, vì đò máy phải thuê)`
+	},
+	{
+		id: 4,
+		title: "Đi xuồng chèo trãi nghiệm ngắm cảng biển",
+		mainImage: act4[0],
+		description: "Đi xuồng chèo trãi nghiệm ngắm cảng biển.",
+		images: act4.slice(1),
+		details: `Hành trình Đi xuồng chèo trãi nghiệm ngắm cảng biển sáng sớm, cũng có thể vừa chèo vừa ngắm biển...
+		Thời gian: Tự do
+		Giá: Trung bình 10.000 VNĐ/người/lượt qua lại bờ biển;
+		Nếu đi dạo 30~45 phút -> 50.000 VNĐ/người/lượt;
+		(giá cả sẽ thảo luận với người lái đò, chú Phương chỉ hướng dẫn và đi cùng, không lấy phí).`
 	},
 	// ✏️ Add more activities here following the same structure
   ]
